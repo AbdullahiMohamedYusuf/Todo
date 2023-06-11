@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      /* Styling the to-do list container */
+      * {
+        font-family: "Courier New", Courier, monospace;
+        text-decoration: none;
+      }
+      /* Styling the todo list container */
+      .todo-list-container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f5f5f5;
+        border-radius: 5px;
+      }
+
+      /* Styling the todo items */
+      .todo-item {
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #ccc;
+      }
+
+      /* Styling the user */
+      .user {
+        font-size: 14px;
+        color: #888;
+      }
+
+      /* Styling the task */
+      .task {
+        font-size: 24px;
+        color: #333;
+        margin-top: 10px;
+        margin-bottom: 5px;
+      }
+
+      /* Styling the body */
+      .body {
+        font-size: 16px;
+        color: #777;
+        margin-bottom: 10px;
+      }
+
+      /* Styling the form button */
+      .form-button form {
+        display: inline-block;
+        margin-right: 10px;
+      }
+      a {
+        color: #000;
+      }
+      .btn {
+        padding: 8px 15px;
+        background-color: #333;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        font-size: 14px;
+        cursor: pointer;
+      }
+
+      /* Styling the form button on hover */
+      .btn{
+        background-color: #555;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="todo-list-container">
+      <div class="todo-item">
+        <h1 style="text-align: center">TASK</h1>
+        {% for task in todo %}
+        <h5 style="color: #888">@{{task.user}}</h5>
+        <h1>{{task.task}}</h1>
+        <p>{{task.body}}</p>
+        <div class="form-button">
+          <form action="" method="get">
+            {% csrf_token %}
+            <a href="{% url 'delete' task.id %}">Delete</a>
+          </form>
+          <form action="" method="get">
+            {% csrf_token %}
+            <input type="submit" value="Edit" />
+          </form>
+        </div>
+        {% endfor %}
+      </div>
+      <a href="{% url 'home'%}">Add</a>
+    </div>
+  </body>
+</html>
