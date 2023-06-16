@@ -15,18 +15,14 @@ def home(request):
     form = Task
     current_user = request.user.id
 
-    initial_data= {
-        'user': request.user
-    }
-
     if request.method == 'POST':
         form = Task(request.POST)
         if form.is_valid():
-            form = Task(request.POST, initial=initial_data)
-            form.save()
+            task = form.save(commit=False)
+            task.user =request.user
+            task.save()
             return redirect('/task')
     context = {"form": form}
-
     return render(request, 'base/index.html', context)
 
 @login_required(login_url='/login')
