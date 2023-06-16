@@ -80,6 +80,8 @@
         <h1>{{task.task}}</h1>
         <p>{{task.body}}</p>
         <div class="form-button">
+
+          
           <form action="" method="get">
             {% csrf_token %}
             <a href="{% url 'delete' task.id %}">Delete</a>

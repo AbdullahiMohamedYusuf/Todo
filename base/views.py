@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from .form import Task, SignUp
+from .form import Task, SignUp, NewUserForm
 from .models import Todo
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, logout
@@ -13,18 +13,29 @@ from django.contrib.auth.decorators import login_required
 @login_required(login_url='/login')
 def home(request):
     form = Task
-    context = {"form": form}
+    current_user = request.user.id
+
+    initial_data= {
+        'user': request.user
+    }
 
     if request.method == 'POST':
         form = Task(request.POST)
         if form.is_valid():
+            form = Task(request.POST, initial=initial_data)
             form.save()
             return redirect('/task')
+    context = {"form": form}
+
     return render(request, 'base/index.html', context)
 
 @login_required(login_url='/login')
 def task(request):
-    todo = Todo.objects.all()
+    #todo = Todo.objects.all()
+    current_user = request.user.id
+
+    todo = Todo.objects.filter(user=current_user)
+
     context= {'todo': todo}
     return render(request, 'base/tasks.html', context)
 
@@ -53,7 +64,7 @@ def login(request):
 
         if user is not None:
             auth_login(request, user)
-            return redirect('')
+            return redirect('home')
         else:
             messages.error(request, 'Username or password does not exist')
 
@@ -63,19 +74,11 @@ def login(request):
 
 
 def signup(request):
+    form = NewUserForm()
+    context = {"form": form}
     if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        email = request.POST.get('email')
-
-
-        if User.objects.filter(username=username, password=password).exists():
-            messages.error(request, 'User already exists')
-            return redirect('/login')
-        else:
-            User.objects.create(username=username,password=password,email=email)
-            messages.success(request, 'User created')
-            return redirect('/login')
-
-        
-    return render(request, 'base/sign.html')
+        form = NewUserForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            return redirect('login')
+    return render(request, 'base/sign.html', context)
