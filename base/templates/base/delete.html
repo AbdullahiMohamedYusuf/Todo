@@ -28,7 +28,7 @@
   <body>
     <form action="" method="post" class="delete-box">
         {% csrf_token %}
-      <p>Are you sure you want to delete "<strong>{{room }}</strong>"?</p>
+      <p>Are you sure you want to delete "<strong>{{room}}</strong>"?</p>
       <a href="{% url 'task'%}">Return</a>
       <input type="submit" value="Yes" class="delete-button" />
     </form>

@@ -3,7 +3,8 @@ from django.http import HttpResponse
 from .form import Task, SignUp, NewUserForm
 from .models import Todo
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, logout
+from django.contrib.auth import authenticate
+from django.contrib.auth import logout as auth_logout
 from django.contrib.auth import login as auth_login
 
 from django.contrib import messages
@@ -78,3 +79,11 @@ def signup(request):
             user = form.save()
             return redirect('login')
     return render(request, 'base/sign.html', context)
+
+
+@login_required(login_url='/login')
+def logout(request):
+    if request.method == 'POST':
+        auth_logout(request)
+        return redirect('/login')
+    return render(request, 'base/logout.html')
