@@ -35,7 +35,7 @@ def task(request):
 
     if request.method == "POST":
         search = request.POST['Search']
-        todo = Todo.objects.filter(task__contains=search, user=request.user)
+        todo = Todo.objects.filter(task__icontains=search, user=request.user)
         if todo == None:
             message = "Task does not exist"
         #return render(request, 'base/tasks.html', {'todo': todo})
