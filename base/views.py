@@ -29,11 +29,18 @@ def home(request):
 @login_required(login_url='/login')
 def task(request):
     #todo = Todo.objects.all()
+    message = ''
     current_user = request.user.id
-
     todo = Todo.objects.filter(user=current_user)
 
-    context= {'todo': todo}
+    if request.method == "POST":
+        search = request.POST['Search']
+        todo = Todo.objects.filter(task__contains=search, user=request.user)
+        if todo == None:
+            message = "Task does not exist"
+        #return render(request, 'base/tasks.html', {'todo': todo})
+
+    context= {'todo': todo, "message":  message}
     return render(request, 'base/tasks.html', context)
 
 
